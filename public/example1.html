@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <p>
+
+    </p>
+    <script>
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('GET', 'http://jsonplaceholder.typicode.com/posts', true);
+
+        console.log("I AM BEFORE THE ONLOAD") //1
+        xhr.onload = (event) => {
+            console.log("I AM INSIDE THE ONLOAD")//3
+            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status === 304) {
+                let parsedResponse = JSON.parse(xhr.responseText)
+                console.log(parsedResponse)
+                let bufferOfPostTitles = ""
+                for(let post of parsedResponse){
+                    bufferOfPostTitles += post.title + " - "
+                }
+                document.querySelector('p').innerText = bufferOfPostTitles
+                            
+            } else {
+                console.log('Some problem ' + xhr.status);
+            }
+        }
+        console.log("I AM OUTSIDE THE ONLOAD AND AFTER")//2
+        xhr.send(null);
+
+    </script>
+</body>
+</html>

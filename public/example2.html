@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <p>READY TO LOAD  !</p>
+    <script>
+        function handleErrorInAJAX(err){
+            console.log('Oh no.', err)
+        }
+        $(document).ready(function(event){
+            let AJAXParameters = {
+                url:'http://jsonplaceholdear.typicode.com/posts',
+                method: 'GET'
+            } //Setting parameters for our AJAX request
+
+            // $.ajax({url:'something', method:'GET'}) we could do it without a variable
+            $('p').text('LOADING') //Replace ready to load with loading before starting the request
+            setTimeout(() => { //Emulating a latency of 2 seconds
+                 $.ajax(AJAXParameters) //Initialize & execute an AJAX request with the AJAXParameters variable
+                    .done(listOfPosts => { //When the request has completed succesfully, execute the callback with data as parameter
+                        console.log(listOfPosts)
+                        for(let post of listOfPosts){ //Looping through the posts (listOfPosts object)
+                            let currentPTagWithTitleInside = $('<p>').text(post.title) //Create a p tag, and add text inside (post.title), refering it to a variable
+                            $('body').append(currentPTagWithTitleInside) //Appending my stored p tag inside the body
+                        }
+                    })
+                    .fail(handleErrorInAJAX) //Refering to an error fct if there is a problem
+                    .fail(err => handleErrorInAJAX(err)) //refering to an anonymous function that will execute the error fct if there is a
+                    .always(data => $('p:first-of-type').text('LOADED !'))
+            }, 2000)
+           
+        })    
+    </script>
+</body>
+</html>
